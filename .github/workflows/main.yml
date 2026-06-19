@@ -29,17 +29,6 @@ jobs:
       - name: Run build script
         run: ./build.sh
 
-      - name: Package WAR (ROOT.war)
-        run: |
-          if [ ! -d "$WEBAPP_DIR/WEB-INF" ]; then
-            echo "ERROR: $WEBAPP_DIR/WEB-INF not found. Update WEBAPP_DIR in the workflow."
-            exit 1
-          fi
-          cd "$WEBAPP_DIR"
-          jar -cvf ../ROOT.war .
-          cd ..
-          ls -la ROOT.war
-
       - name: Deploy WAR to Tomcat9
         run: |
           set -e
