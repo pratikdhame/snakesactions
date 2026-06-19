@@ -103,7 +103,7 @@
     <tagfiles:header />
 
     <div id="hate" class="container snakes snake-hater">
-      <h1 class="cover-heading">🐍 Does it Have Snakes?</h1>
+      <h1 class="cover-heading">WELCOME TO LTM...</h1>
       <p class="lead">Your safety resource for staying snake-free at the movies.</p>
 
       <div class="toggle-banner">
