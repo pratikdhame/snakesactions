@@ -3,7 +3,7 @@ name: Build and Deploy to Tomcat9 (Self-Hosted)
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   WEBAPP_DIR: webapps
