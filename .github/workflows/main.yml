@@ -1,49 +1,23 @@
-name: Build and Deploy to Tomcat9 (Self-Hosted)
-
+name: Deploy to Tomcat9
 on:
   push:
-    branches:
-      - master
-
-env:
-  WEBAPP_DIR: webapps
+    branches: [master]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: self-hosted
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Verify dependencies
+      - name: Build
         run: |
-          command -v java >/dev/null 2>&1 || { echo "Java not found. Run setup-ec2.sh first."; exit 1; }
-          command -v jar >/dev/null 2>&1 || { echo "jar (JDK) not found. Run setup-ec2.sh first."; exit 1; }
-          systemctl is-active --quiet tomcat9 || sudo systemctl start tomcat9
-          java -version
+          chmod +x build.sh
+          ./build.sh
 
-      - name: Make build.sh executable
-        run: chmod +x ./build.sh
-
-      - name: Run build script
-        run: ./build.sh
-
-      - name: Deploy WAR to Tomcat9
+      - name: Deploy
         run: |
-          set -e
-          echo "Stopping Tomcat..."
           sudo systemctl stop tomcat9
-
-          echo "Removing old root deployment..."
-          sudo rm -rf /var/lib/tomcat9/webapps/ROOT
-          sudo rm -f /var/lib/tomcat9/webapps/ROOT.war
-
-          echo "Deploying new WAR..."
+          sudo rm -rf /var/lib/tomcat9/webapps/ROOT*
           sudo cp ROOT.war /var/lib/tomcat9/webapps/ROOT.war
           sudo chown tomcat:tomcat /var/lib/tomcat9/webapps/ROOT.war
-
-          echo "Starting Tomcat..."
           sudo systemctl start tomcat9
-          sleep 3
-          sudo systemctl status tomcat9 --no-pager
